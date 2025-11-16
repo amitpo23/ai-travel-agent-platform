@@ -312,13 +312,12 @@ Instructions:
                 const searchResult = await mediciApi.searchHotelPrice({
                   dateFrom: functionArgs.dateFrom,
                   dateTo: functionArgs.dateTo,
-                  hotelName: functionArgs.hotelName,
+                  city: functionArgs.city || functionArgs.destination || '',
                   pax: [{
                     adults: functionArgs.adults || 2,
                     children: functionArgs.children || [],
                   }],
-                  stars: null,
-                  limit: null,
+                  ShowExtendedData: true,
                 });
 
                 toolResult = {

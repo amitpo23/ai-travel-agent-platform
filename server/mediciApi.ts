@@ -43,13 +43,15 @@ async function makeApiRequest<T>(
 export interface SearchPriceRequest {
   dateFrom: string; // Format: "YYYY-MM-DD"
   dateTo: string;   // Format: "YYYY-MM-DD"
-  hotelName: string;
+  city?: string;    // City name for search
   pax: Array<{
     adults: string | number;
     children: any[];
   }>;
-  stars?: number | null;
-  limit?: number | null;
+  stars?: number[];
+  limit?: number;
+  ShowExtendedData?: boolean; // Get extended hotel data (images, facilities, description)
+  client_secret?: string; // Authentication secret
 }
 
 export interface RoomOffer {
@@ -220,10 +222,21 @@ export interface CancelResponse {
 export async function searchHotelPrice(
   request: SearchPriceRequest
 ): Promise<SearchPriceResponse> {
+  const clientSecret = process.env.MEDICI_CLIENT_SECRET;
+  if (!clientSecret) {
+    throw new Error("MEDICI_CLIENT_SECRET environment variable is not set");
+  }
+  
+  // Add client_secret to the request
+  const requestWithSecret = {
+    ...request,
+    client_secret: clientSecret
+  };
+  
   return makeApiRequest<SearchPriceResponse>(
     "GetInnstantSearchPrice",
     "POST",
-    request
+    requestWithSecret
   );
 }
 

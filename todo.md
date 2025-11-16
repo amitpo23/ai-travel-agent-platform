@@ -89,3 +89,13 @@
 - [ ] Add filters (by status, date range, agent)
 - [x] Add statistics cards (total bookings, revenue, conversion rate)
 - [x] Add navigation link in DashboardLayout sidebar
+
+### Phase 6b: Medici API Testing & Fixes
+- [x] Update Base URL to correct endpoint (medici-backend.azurewebsites.net)
+- [x] Fix API request structure (city instead of hotelName, ShowExtendedData)
+- [x] Add client_secret to API requests body
+- [x] Configure MEDICI_CLIENT_SECRET in environment
+- [ ] Test GetInnstantSearchPrice endpoint with real chat
+- [ ] Test PreBook endpoint
+- [ ] Test Book endpoint
+- [ ] Verify response parsing and error handling
