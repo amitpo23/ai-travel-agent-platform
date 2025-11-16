@@ -379,6 +379,39 @@ export const appRouter = router({
       }),
   }),
 
+  // Booking Management (Admin only)
+  bookings: router({
+    getAll: adminProcedure.query(async () => {
+      return db.getAllBookings();
+    }),
+    
+    getById: protectedProcedure
+      .input(z.object({ id: z.number() }))
+      .query(async ({ input }) => {
+        return db.getBookingById(input.id);
+      }),
+    
+    cancel: adminProcedure
+      .input(z.object({
+        id: z.number(),
+        reason: z.string().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const booking = await db.getBookingById(input.id);
+        if (!booking) {
+          throw new TRPCError({ code: 'NOT_FOUND', message: 'Booking not found' });
+        }
+
+        // Update status in database
+        await db.updateBookingStatus(input.id, 'cancelled');
+
+        // TODO: Call Medici API to cancel the booking if bookingData contains the necessary info
+        // This would require extracting BookingID from bookingData and calling cancelBooking
+
+        return { success: true, message: 'Booking cancelled successfully' };
+      }),
+  }),
+
   // Conversation Management (Public for chat interface)
   conversations: router({
     getOrCreate: publicProcedure

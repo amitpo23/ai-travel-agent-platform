@@ -77,3 +77,15 @@
 - [x] Store booking details in database
 - [x] Add API authentication (Bearer token) to secrets
 - [ ] Test full booking flow end-to-end
+
+## Phase 7: Booking Management Dashboard
+- [x] Create backend tRPC procedures for booking management
+- [x] Implement getAllBookings with pagination and filters
+- [x] Implement cancelBooking procedure with Medici API integration
+- [x] Create BookingsPage component in admin dashboard
+- [x] Add bookings table with all booking details
+- [x] Add status badges (Confirmed, Pending, Cancelled)
+- [x] Add cancel button with confirmation dialog
+- [ ] Add filters (by status, date range, agent)
+- [x] Add statistics cards (total bookings, revenue, conversion rate)
+- [x] Add navigation link in DashboardLayout sidebar

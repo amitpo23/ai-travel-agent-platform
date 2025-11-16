@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import AgentsPage from "./pages/admin/AgentsPage";
 import AgentFormPage from "./pages/admin/AgentFormPage";
 import KnowledgeBasePage from "./pages/admin/KnowledgeBasePage";
+import BookingsPage from "./pages/admin/BookingsPage";
 import ChatPage from "./pages/ChatPage";
 
 function Router() {
@@ -20,6 +21,7 @@ function Router() {
       <Route path="/admin/agents/new" component={AgentFormPage} />
       <Route path="/admin/agents/:id/edit" component={AgentFormPage} />
       <Route path="/admin/agents/:id/knowledge" component={KnowledgeBasePage} />
+      <Route path="/admin/bookings" component={BookingsPage} />
       
       {/* Public Chat Route */}
       <Route path="/chat/:agentId" component={ChatPage} />

@@ -331,3 +331,18 @@ export async function updateBookingStatus(id: number, status: "pending" | "confi
   const result = await db.select().from(bookings).where(eq(bookings.id, id)).limit(1);
   return result[0];
 }
+
+export async function getAllBookings(): Promise<Booking[]> {
+  const db = await getDb();
+  if (!db) return [];
+
+  return db.select().from(bookings).orderBy(desc(bookings.createdAt));
+}
+
+export async function getBookingById(id: number): Promise<Booking | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+
+  const result = await db.select().from(bookings).where(eq(bookings.id, id)).limit(1);
+  return result[0];
+}
