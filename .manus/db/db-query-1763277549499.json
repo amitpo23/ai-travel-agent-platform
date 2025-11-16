@@ -1,0 +1,9 @@
+{
+  "query": "DROP TABLE IF EXISTS messages; DROP TABLE IF EXISTS bookings; DROP TABLE IF EXISTS conversations; DROP TABLE IF EXISTS knowledgeItems; DROP TABLE IF EXISTS knowledgeBases; DROP TABLE IF EXISTS agents; DROP TABLE IF EXISTS users;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3gaYF7se9kVaEXG.root --database GcrkPjTtp2xkHAwgBE57sB --execute DROP TABLE IF EXISTS messages; DROP TABLE IF EXISTS bookings; DROP TABLE IF EXISTS conversations; DROP TABLE IF EXISTS knowledgeItems; DROP TABLE IF EXISTS knowledgeBases; DROP TABLE IF EXISTS agents; DROP TABLE IF EXISTS users;",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 5080
+}

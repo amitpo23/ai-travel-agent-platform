@@ -1,0 +1,1 @@
+ALTER TABLE `agents` MODIFY COLUMN `tone` varchar(255) NOT NULL DEFAULT 'friendly and professional';
