@@ -64,3 +64,16 @@
 - [x] Add dark mode toggle
 - [x] Improve message bubbles styling
 - [x] Add smooth animations and transitions
+
+## Phase 6: Medici Hotels API Integration
+- [x] Create API client for Medici Hotels backend
+- [x] Implement GetInstantSearchPrice endpoint wrapper
+- [x] Implement PreBook endpoint wrapper
+- [x] Implement Book endpoint wrapper
+- [x] Implement CancelRoomDirectJson endpoint wrapper
+- [x] Add LLM Tool Calling for hotel search
+- [x] Add LLM Tool Calling for booking
+- [ ] Add LLM Tool Calling for cancellation
+- [x] Store booking details in database
+- [x] Add API authentication (Bearer token) to secrets
+- [ ] Test full booking flow end-to-end
