@@ -54,3 +54,13 @@
 - [ ] Create seed data for demo agents
 - [ ] Add error handling and loading states
 - [ ] Create final checkpoint for deployment
+
+## Phase 5b: Chat UI Redesign (Vercel Template Style)
+- [x] Redesign chat interface to match Vercel Nuxt AI Chatbot template
+- [x] Add sidebar with conversation history and "New chat" button
+- [x] Center the initial prompt with "How can I help you today?"
+- [x] Add suggested prompts as clickable buttons with icons
+- [x] Implement model selector in input area
+- [x] Add dark mode toggle
+- [x] Improve message bubbles styling
+- [x] Add smooth animations and transitions
