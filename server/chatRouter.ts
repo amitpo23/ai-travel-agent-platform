@@ -38,13 +38,13 @@ const hotelSearchTool = {
   type: "function" as const,
   function: {
     name: "search_hotels",
-    description: "Search for available hotel rooms with pricing. Use this when the user asks about hotel availability, prices, or wants to find a room.",
+    description: "Search for available hotel rooms with pricing. Use this when the user asks about hotel availability, prices, or wants to find a room in a specific city.",
     parameters: {
       type: "object",
       properties: {
-        hotelName: {
+        city: {
           type: "string",
-          description: "Name of the hotel to search (e.g., 'Dizengoff Inn')",
+          description: "City or destination to search for hotels (e.g., 'Dubai', 'Tel Aviv', 'New York')",
         },
         dateFrom: {
           type: "string",
@@ -64,7 +64,7 @@ const hotelSearchTool = {
           description: "Array of children ages (empty array if no children)",
         },
       },
-      required: ["hotelName", "dateFrom", "dateTo"],
+      required: ["city", "dateFrom", "dateTo"],
     },
   },
 };
@@ -312,7 +312,7 @@ Instructions:
                 const searchResult = await mediciApi.searchHotelPrice({
                   dateFrom: functionArgs.dateFrom,
                   dateTo: functionArgs.dateTo,
-                  city: functionArgs.city || functionArgs.destination || '',
+                  city: functionArgs.city,
                   pax: [{
                     adults: functionArgs.adults || 2,
                     children: functionArgs.children || [],

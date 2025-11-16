@@ -1,10 +1,13 @@
 // Simple test without dotenv
 const MEDICI_API_TOKEN = process.env.MEDICI_API_TOKEN;
+const MEDICI_CLIENT_SECRET = process.env.MEDICI_CLIENT_SECRET;
 const BASE_URL = 'https://medici-backend.azurewebsites.net/api/hotels';
 
 console.log('🔍 Testing Medici Hotels API\n');
 console.log('Token exists:', !!MEDICI_API_TOKEN);
 console.log('Token preview:', MEDICI_API_TOKEN ? MEDICI_API_TOKEN.substring(0, 30) + '...' : 'NOT FOUND');
+console.log('Client Secret exists:', !!MEDICI_CLIENT_SECRET);
+console.log('Client Secret preview:', MEDICI_CLIENT_SECRET ? MEDICI_CLIENT_SECRET.substring(0, 20) + '...' : 'NOT FOUND');
 console.log('Base URL:', BASE_URL);
 console.log('\n' + '='.repeat(60) + '\n');
 
@@ -17,7 +20,8 @@ const searchRequest = {
     adults: 2,
     children: []
   }],
-  ShowExtendedData: true
+  ShowExtendedData: true,
+  client_secret: MEDICI_CLIENT_SECRET
 };
 
 console.log('📍 Sending request to GetInnstantSearchPrice');
