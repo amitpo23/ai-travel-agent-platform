@@ -101,30 +101,40 @@ export default function AgentsPage() {
                     {agent.agencyName && <div>Agency: {agent.agencyName}</div>}
                     <div>Language: {agent.defaultLanguage}</div>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="space-y-2">
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex-1"
+                        onClick={() => setLocation(`/admin/agents/${agent.id}/knowledge`)}
+                      >
+                        <Database className="w-4 h-4 mr-2" />
+                        Knowledge
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setLocation(`/admin/agents/${agent.id}/edit`)}
+                      >
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDelete(agent.id, agent.name)}
+                        disabled={deleteMutation.isPending}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
                     <Button
-                      variant="outline"
+                      variant="default"
                       size="sm"
-                      className="flex-1"
-                      onClick={() => setLocation(`/admin/agents/${agent.id}/knowledge`)}
+                      className="w-full"
+                      onClick={() => window.open(`/chat/${agent.id}`, '_blank')}
                     >
-                      <Database className="w-4 h-4 mr-2" />
-                      Knowledge
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setLocation(`/admin/agents/${agent.id}/edit`)}
-                    >
-                      <Edit className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleDelete(agent.id, agent.name)}
-                      disabled={deleteMutation.isPending}
-                    >
-                      <Trash2 className="w-4 h-4" />
+                      Test Chat
                     </Button>
                   </div>
                 </CardContent>

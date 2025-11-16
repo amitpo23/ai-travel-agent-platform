@@ -27,12 +27,12 @@
 - [x] Add agent configuration UI (personality, tone, system prompt)
 
 ## Phase 5: Chat Interface
-- [ ] Build public chat interface for end users
-- [ ] Integrate LLM with agent context and system prompts
-- [ ] Implement knowledge base retrieval (RAG mockup)
-- [ ] Add streaming chat responses
-- [ ] Implement conversation history persistence
-- [ ] Add agent type-specific behavior (Travel Agent vs Hotel Concierge)
+- [x] Build public chat interface for end users
+- [x] Integrate LLM with agent context and system prompts
+- [x] Implement Knowledge Base retrieval (RAG)
+- [x] Add streaming responses
+- [x] Save conversation history
+- [x] Support multiple languages
 
 ## Phase 6: Stripe Integration
 - [ ] Set up Stripe webhook handler
