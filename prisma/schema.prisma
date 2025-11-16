@@ -1,0 +1,103 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// --- User and Authentication ---
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  password      String? // For basic auth, though NextAuth is preferred
+  role          Role      @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Stripe Billing Fields
+  stripeCustomerId      String?   @unique
+  stripeSubscriptionId  String?   @unique
+  stripePriceId         String?
+  stripeCurrentPeriodEnd DateTime?
+
+  // Relationship to Agents (A user manages multiple agents)
+  agents Agent[]
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+// --- Agent Management ---
+model Agent {
+  id                String          @id @default(cuid())
+  userId            String          // Owner/Manager of the agent
+  name              String
+  agentType         AgentType
+  hotelName         String?
+  agencyName        String?
+  description       String?
+  personality       String?
+  avatarUrl         String?
+  systemPrompt      String
+  defaultLanguage   String          @default("he")
+  tone              String          @default("friendly and professional")
+  isActive          Boolean         @default(true)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  // Relationships
+  owner             User            @relation(fields: [userId], references: [id])
+  knowledgeBases    KnowledgeBase[]
+  allowedTools      Tool[]
+}
+
+enum AgentType {
+  TRAVEL_AGENT
+  HOTEL_CONCIERGE_BOT
+}
+
+// --- Knowledge Base ---
+model KnowledgeBase {
+  id            String          @id @default(cuid())
+  agentId       String
+  name          String
+  description   String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  // Relationships
+  agent         Agent           @relation(fields: [agentId], references: [id])
+  items         KnowledgeItem[]
+}
+
+model KnowledgeItem {
+  id                String          @id @default(cuid())
+  knowledgeBaseId   String
+  title             String
+  content           String          @db.Text
+  metadata          Json?           // For source, type, etc.
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  // Relationships
+  knowledgeBase     KnowledgeBase   @relation(fields: [knowledgeBaseId], references: [id])
+}
+
+// --- Tools/Capabilities ---
+model Tool {
+  id            String          @id @default(cuid())
+  name          String          @unique // e.g., "SEARCH_ROOMS", "CREATE_BOOKING"
+  description   String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  // Many-to-many relationship with Agent (explicitly defined for future flexibility)
+  agents        Agent[]
+}
