@@ -33,6 +33,11 @@ JWT_SECRET=your_random_secret_key_here
 
 **חשוב:** ללא הגדרת `MEDICI_API_TOKEN` ו-`MEDICI_CLIENT_SECRET`, חיפוש מלונות לא יעבוד!
 
+**💡 צריך Bearer Token חדש?** ראה [מדריך Credentials](MEDICI-CREDENTIALS.md) או הרץ:
+```bash
+pnpm get-token
+```
+
 ### 3. הרצת Database Migrations
 
 ```bash
