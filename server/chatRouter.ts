@@ -313,10 +313,8 @@ Instructions:
                   dateFrom: functionArgs.dateFrom,
                   dateTo: functionArgs.dateTo,
                   city: functionArgs.city || functionArgs.destination || '',
-                  pax: [{
-                    adults: functionArgs.adults || 2,
-                    children: functionArgs.children || [],
-                  }],
+                  adults: functionArgs.adults || 2,
+                  paxChildren: functionArgs.children || [],
                   ShowExtendedData: true,
                 });
 

@@ -44,10 +44,8 @@ export interface SearchPriceRequest {
   dateFrom: string; // Format: "YYYY-MM-DD"
   dateTo: string;   // Format: "YYYY-MM-DD"
   city?: string;    // City name for search
-  pax: Array<{
-    adults: string | number;
-    children: any[];
-  }>;
+  adults: number;   // Number of adults
+  paxChildren: any[]; // Array of children (empty array if no children)
   stars?: number[];
   limit?: number;
   ShowExtendedData?: boolean; // Get extended hotel data (images, facilities, description)

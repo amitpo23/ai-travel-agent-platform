@@ -13,10 +13,8 @@ const searchRequest = {
   dateFrom: '2025-03-15',
   dateTo: '2025-03-17',
   city: 'Dubai',
-  pax: [{
-    adults: 2,
-    children: []
-  }],
+  adults: 2,
+  paxChildren: [],
   ShowExtendedData: true
 };
 

@@ -12,10 +12,8 @@ const searchRequest = {
   dateFrom: '2025-12-11',
   dateTo: '2025-12-12',
   city: 'Tel Aviv',
-  pax: [{
-    adults: 2,
-    children: []
-  }],
+  adults: 2,
+  paxChildren: [],
   ShowExtendedData: true,
   client_secret: CLIENT_SECRET
 };
