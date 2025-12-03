@@ -11,11 +11,13 @@ console.log('='.repeat(60));
 
 // בדיקת משתני סביבה
 const requiredEnvVars = {
-  'MEDICI_API_TOKEN': 'Bearer token לאימות מול Medici API',
-  'MEDICI_CLIENT_SECRET': 'Client secret לבקשות API',
+  'MEDICI_API_TOKEN': 'Bearer token לאימות מול Medici API (בheader בלבד)',
   'OPENAI_API_KEY': 'מפתח API של OpenAI',
   'DATABASE_URL': 'כתובת התחברות למסד נתונים',
 };
+
+// NOTE: MEDICI_CLIENT_SECRET is NOT needed for GetInnstantSearchPrice
+// Only the Bearer Token (MEDICI_API_TOKEN) is required in the Authorization header
 
 console.log('\n📋 בדיקת משתני סביבה:\n');
 
@@ -48,24 +50,21 @@ if (allGood) {
   console.log('🔍 בודק חיבור ל-Medici API...\n');
 
   // Using official Medici API format
+  // NOTE: client_secret is NOT needed and causes errors! Only Bearer Token is required.
   const testRequest = {
-    dateFrom: '2025-03-15',
-    dateTo: '2025-03-16',
-    city: 'Dubai',
+    dateFrom: '2025-12-10',
+    dateTo: '2025-12-11',
+    city: 'Tel Aviv',  // Using Tel Aviv as it has more availability
     pax: [{
       adults: 2,
       children: []
     }],
-    limit: 3,
-    ShowExtendedData: true,  // Returns images, descriptions, facilities
-    client_secret: process.env.MEDICI_CLIENT_SECRET
+    limit: 2,
+    ShowExtendedData: true  // Returns images, descriptions, facilities
   };
 
   console.log('📤 שולח בקשת טסט:');
-  console.log(JSON.stringify({
-    ...testRequest,
-    client_secret: '***HIDDEN***'
-  }, null, 2));
+  console.log(JSON.stringify(testRequest, null, 2));
   console.log('');
 
   try {

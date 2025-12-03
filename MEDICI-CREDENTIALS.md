@@ -32,22 +32,18 @@ curl -H "Authorization: Bearer eyJhbGc..." \
 zlbgGGxz~|l3.Q?XXAT)uT!Lty,kJC>R?`:k?oQH$I=P7rL<R:Em:qDaM1G(jFU7
 ```
 
-**שימוש:** נשלח ב-**body** של בקשות מסוימות
+**⚠️ IMPORTANT: NOT needed for GetInnstantSearchPrice!**
 
-**איפה:**
-- GetInnstantSearchPrice (בbody, לא בheader!)
-- אולי גם בקריאה לקבלת Bearer Token חדש
+**שימוש:** אולי נדרש לendpoints אחרים (לא לGetInnstantSearchPrice)
 
-**דוגמה:**
-```json
-{
-  "dateFrom": "2025-03-15",
-  "dateTo": "2025-03-16",
-  "city": "Dubai",
-  "pax": [{"adults": 2, "children": []}],
-  "client_secret": "zlbgGGxz~|l3.Q?XXAT)uT!Lty,kJC>R?`:k?oQH$I=P7rL<R:Em:qDaM1G(jFU7"
-}
-```
+**בדיקות הוכיחו:**
+- ❌ GetInnstantSearchPrice עם client_secret → HTTP 500 Error
+- ✅ GetInnstantSearchPrice בלי client_secret → HTTP 200 OK
+
+**איפה אולי נדרש:**
+- PreBook? (לא נבדק)
+- Book? (לא נבדק)
+- קריאה לקבלת Bearer Token חדש? (לא נבדק)
 
 ---
 
@@ -86,20 +82,21 @@ $2y$10$zmUK0OGNeeTtiGcV/cpWsOrZY7VXbt0Bzp16VwPPQ8z46DNV6esum
 ### למה שצריך עכשיו (GetInnstantSearchPrice):
 
 ```javascript
-// בקשה לחיפוש מלונות
+// בקשה לחיפוש מלונות - רק Bearer Token נדרש!
 await fetch('https://medici-backend.azurewebsites.net/api/hotels/GetInnstantSearchPrice', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${MEDICI_API_TOKEN}`  // ← Bearer Token בheader
+    'Authorization': `Bearer ${MEDICI_API_TOKEN}`  // ← רק את זה צריך!
   },
   body: JSON.stringify({
-    dateFrom: '2025-03-15',
-    dateTo: '2025-03-16',
-    city: 'Dubai',
+    dateFrom: '2025-12-10',
+    dateTo: '2025-12-11',
+    city: 'Tel Aviv',
     pax: [{ adults: 2, children: [] }],
-    client_secret: MEDICI_CLIENT_SECRET,  // ← Client Secret בbody
-    ShowExtendedData: true
+    ShowExtendedData: true,
+    limit: 5
+    // ⚠️ אל תוסיף client_secret - זה גורם ל-HTTP 500!
   })
 });
 ```

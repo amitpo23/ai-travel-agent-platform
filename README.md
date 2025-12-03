@@ -20,7 +20,6 @@ DATABASE_URL=mysql://user:password@localhost:3306/ai_travel_agent
 
 # Medici Hotels API - קבל את הנתונים האלה ממערכת Medici Hotels
 MEDICI_API_TOKEN=eyJhbGciOiJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzA0L3htbGRzaWctbW9yZSNobWFjLXNoYTI1NiIsInR5cCI6IkpXVCJ9...
-MEDICI_CLIENT_SECRET=zlbgGGxz~|l3.Q?XXAT)uT!Lty,kJC>R?`:k?oQH$I=P7rL<R:Em:qDaM1G(jFU7
 
 # OpenAI API
 OPENAI_API_KEY=sk-...
@@ -31,7 +30,7 @@ NODE_ENV=development
 JWT_SECRET=your_random_secret_key_here
 ```
 
-**חשוב:** ללא הגדרת `MEDICI_API_TOKEN` ו-`MEDICI_CLIENT_SECRET`, חיפוש מלונות לא יעבוד!
+**חשוב:** חובה להגדיר `MEDICI_API_TOKEN` (Bearer Token) - זה המזהה היחיד הנדרש לחיפוש מלונות!
 
 **💡 צריך Bearer Token חדש?** ראה [מדריך Credentials](MEDICI-CREDENTIALS.md) או הרץ:
 ```bash

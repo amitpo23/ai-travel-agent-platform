@@ -47,6 +47,8 @@ async function makeApiRequest<T>(
 }
 
 // Types based on official Medici API documentation and examples
+// NOTE: Only Bearer Token (in Authorization header) is required for authentication
+// Do NOT send client_secret in body - it causes 500 errors!
 export interface SearchPriceRequest {
   dateFrom: string; // Format: "YYYY-MM-DD"
   dateTo: string;   // Format: "YYYY-MM-DD"
@@ -58,7 +60,6 @@ export interface SearchPriceRequest {
   stars?: number[];
   limit?: number;
   ShowExtendedData?: boolean; // Get extended hotel data (images, facilities, description) - REQUIRED for full details!
-  client_secret?: string; // Authentication secret
 }
 
 export interface RoomOffer {
@@ -225,30 +226,24 @@ export interface CancelResponse {
 
 /**
  * Search for available hotel rooms with instant pricing
+ * Note: Only Bearer Token is required - client_secret causes 500 errors!
  */
 export async function searchHotelPrice(
   request: SearchPriceRequest
 ): Promise<SearchPriceResponse> {
-  const clientSecret = process.env.MEDICI_CLIENT_SECRET;
-  if (!clientSecret) {
-    throw new Error("MEDICI_CLIENT_SECRET environment variable is not set");
-  }
-
-  // Add client_secret to the request
-  const requestWithSecret = {
-    ...request,
-    client_secret: clientSecret
-  };
-
   console.log('[MediciAPI] SearchHotelPrice request:', {
-    ...requestWithSecret,
-    client_secret: '***HIDDEN***'
+    ...request,
+    // Don't log sensitive data, but show structure
+    dateFrom: request.dateFrom,
+    dateTo: request.dateTo,
+    city: request.city,
+    paxCount: request.pax?.length || 0
   });
 
   const response = await makeApiRequest<SearchPriceResponse>(
     "GetInnstantSearchPrice",
     "POST",
-    requestWithSecret
+    request  // Send request as-is, without adding client_secret
   );
 
   console.log('[MediciAPI] SearchHotelPrice response:', {
