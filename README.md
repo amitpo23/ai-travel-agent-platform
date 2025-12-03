@@ -70,18 +70,30 @@ pnpm start
 AI Agent: בואו אחפש עבורך מלונות בדובאי... [משתמש ב-search_hotels tool]
 ```
 
-## Troubleshooting
+## Troubleshooting / איך לראות לוגים
+
+**📖 קרא את [מדריך הדיבוג המלא](DEBUGGING.md)** - מסביר בדיוק איך לראות לוגים ולמצוא בעיות!
+
+### בדיקה מהירה
+
+הרץ את זה כדי לבדוק שהכל מוגדר נכון:
+```bash
+pnpm check-config
+# או
+node check-config.mjs
+```
 
 ### המערכת לא מחזירה תוצאות מה-API
 
-1. בדוק שהגדרת את `MEDICI_API_TOKEN` ו-`MEDICI_CLIENT_SECRET` ב-`.env`
-2. בדוק בקונסול את הלוגים:
+1. **בדוק הגדרות:** `node check-config.mjs`
+2. **הרץ שרת:** `pnpm dev` והשאר את הטרמינל פתוח
+3. **בדוק לוגים בטרמינל** - אמור לראות:
    ```
    [MediciAPI] Making POST request to https://medici-backend.azurewebsites.net/api/hotels/GetInnstantSearchPrice
    [MediciAPI] Response status: 200 OK
    [Chat] Search result: { itemsCount: 15, hasItems: true }
    ```
-3. אם אתה רואה שגיאות, הלוגים יראו את השגיאה המדויקת מה-API
+4. **אם יש שגיאות** - הלוגים יראו בדיוק מה הבעיה
 
 ### הסוכן לא מבין בקשות לחיפוש מלונות
 
