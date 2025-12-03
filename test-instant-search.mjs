@@ -7,14 +7,17 @@ console.log('Base URL:', BASE_URL);
 console.log('Using Bearer token from curl example\n');
 console.log('='.repeat(60) + '\n');
 
-// Test with exact structure from curl command
+// Test with official Medici API format (from their documentation)
 const searchRequest = {
   dateFrom: '2025-03-15',
   dateTo: '2025-03-16',
   city: 'Dubai',
-  adults: 2,
-  paxChildren: [],
-  limit: 3
+  pax: [{
+    adults: 2,
+    children: []
+  }],
+  limit: 3,
+  ShowExtendedData: true  // Returns images, descriptions, facilities
 };
 
 console.log('📍 Sending request to GetInnstantSearchPrice');

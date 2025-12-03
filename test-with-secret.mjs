@@ -7,14 +7,16 @@ console.log('Base URL:', BASE_URL);
 console.log('Client Secret:', CLIENT_SECRET.substring(0, 20) + '...');
 console.log('\n' + '='.repeat(60) + '\n');
 
-// Test GetInnstantSearchPrice
+// Test GetInnstantSearchPrice - Using official Medici API format
 const searchRequest = {
   dateFrom: '2025-12-11',
   dateTo: '2025-12-12',
   city: 'Tel Aviv',
-  adults: 2,
-  paxChildren: [],
-  ShowExtendedData: true,
+  pax: [{
+    adults: 2,
+    children: []
+  }],
+  ShowExtendedData: true,  // IMPORTANT: Returns images, descriptions, facilities
   client_secret: CLIENT_SECRET
 };
 

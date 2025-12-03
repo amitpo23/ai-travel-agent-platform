@@ -8,14 +8,16 @@ console.log('Token preview:', MEDICI_API_TOKEN ? MEDICI_API_TOKEN.substring(0, 3
 console.log('Base URL:', BASE_URL);
 console.log('\n' + '='.repeat(60) + '\n');
 
-// Test GetInnstantSearchPrice
+// Test GetInnstantSearchPrice - Using official Medici API format
 const searchRequest = {
   dateFrom: '2025-03-15',
   dateTo: '2025-03-17',
   city: 'Dubai',
-  adults: 2,
-  paxChildren: [],
-  ShowExtendedData: true
+  pax: [{
+    adults: 2,
+    children: []
+  }],
+  ShowExtendedData: true  // IMPORTANT: Returns images, descriptions, facilities
 };
 
 console.log('📍 Sending request to GetInnstantSearchPrice');

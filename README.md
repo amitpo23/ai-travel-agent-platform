@@ -63,6 +63,21 @@ pnpm start
 - **Book** - ביצוע הזמנה
 - **CancelRoomDirectJson** - ביטול הזמנה
 
+#### מבנה בקשת API (JSON):
+
+```json
+{
+  "dateFrom": "2025-03-15",
+  "dateTo": "2025-03-16",
+  "city": "Dubai",
+  "pax": [{"adults": 2, "children": []}],
+  "ShowExtendedData": true,
+  "limit": 5
+}
+```
+
+**חשוב:** `ShowExtendedData: true` מחזיר תמונות, תיאור מלא, ו-facilities!
+
 #### דוגמה לשימוש בצ'אט:
 
 ```

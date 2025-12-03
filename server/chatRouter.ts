@@ -315,14 +315,17 @@ Instructions:
               if (functionName === "search_hotels") {
                 console.log('[Chat] Searching hotels with params:', functionArgs);
 
+                // Build pax array according to Medici API format
                 const searchResult = await mediciApi.searchHotelPrice({
                   dateFrom: functionArgs.dateFrom,
                   dateTo: functionArgs.dateTo,
                   city: functionArgs.city || '',
-                  adults: functionArgs.adults || 2,
-                  paxChildren: functionArgs.children || [],
+                  pax: [{
+                    adults: functionArgs.adults || 2,
+                    children: functionArgs.children || []
+                  }],
                   limit: functionArgs.limit || 5,
-                  ShowExtendedData: true,
+                  ShowExtendedData: true,  // IMPORTANT: This returns images, descriptions, facilities
                 });
 
                 console.log('[Chat] Search result:', {

@@ -47,13 +47,17 @@ if (allGood) {
   // נסיון לבדוק את ה-API
   console.log('🔍 בודק חיבור ל-Medici API...\n');
 
+  // Using official Medici API format
   const testRequest = {
     dateFrom: '2025-03-15',
     dateTo: '2025-03-16',
     city: 'Dubai',
-    adults: 2,
-    paxChildren: [],
+    pax: [{
+      adults: 2,
+      children: []
+    }],
     limit: 3,
+    ShowExtendedData: true,  // Returns images, descriptions, facilities
     client_secret: process.env.MEDICI_CLIENT_SECRET
   };
 

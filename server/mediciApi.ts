@@ -46,16 +46,18 @@ async function makeApiRequest<T>(
   return data;
 }
 
-// Types based on API documentation
+// Types based on official Medici API documentation and examples
 export interface SearchPriceRequest {
   dateFrom: string; // Format: "YYYY-MM-DD"
   dateTo: string;   // Format: "YYYY-MM-DD"
   city?: string;    // City name for search
-  adults: number;   // Number of adults
-  paxChildren: any[]; // Array of children (empty array if no children)
+  pax: Array<{      // Array of passenger configurations
+    adults: string | number;  // Number of adults (can be string or number)
+    children?: any[];         // Array of children (empty array if no children)
+  }>;
   stars?: number[];
   limit?: number;
-  ShowExtendedData?: boolean; // Get extended hotel data (images, facilities, description)
+  ShowExtendedData?: boolean; // Get extended hotel data (images, facilities, description) - REQUIRED for full details!
   client_secret?: string; // Authentication secret
 }
 
