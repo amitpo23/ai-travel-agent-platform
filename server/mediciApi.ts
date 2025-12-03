@@ -21,8 +21,11 @@ async function makeApiRequest<T>(
   body?: any
 ): Promise<T> {
   const token = getApiToken();
-  
-  const response = await fetch(`${MEDICI_API_BASE_URL}/${endpoint}`, {
+
+  const url = `${MEDICI_API_BASE_URL}/${endpoint}`;
+  console.log(`[MediciAPI] Making ${method} request to ${url}`);
+
+  const response = await fetch(url, {
     method,
     headers: {
       "Content-Type": "application/json",
@@ -31,12 +34,16 @@ async function makeApiRequest<T>(
     body: body ? JSON.stringify(body) : undefined,
   });
 
+  console.log(`[MediciAPI] Response status: ${response.status} ${response.statusText}`);
+
   if (!response.ok) {
     const errorText = await response.text();
+    console.error(`[MediciAPI] Error response:`, errorText);
     throw new Error(`Medici API error: ${response.status} - ${errorText}`);
   }
 
-  return response.json();
+  const data = await response.json();
+  return data;
 }
 
 // Types based on API documentation
@@ -224,18 +231,30 @@ export async function searchHotelPrice(
   if (!clientSecret) {
     throw new Error("MEDICI_CLIENT_SECRET environment variable is not set");
   }
-  
+
   // Add client_secret to the request
   const requestWithSecret = {
     ...request,
     client_secret: clientSecret
   };
-  
-  return makeApiRequest<SearchPriceResponse>(
+
+  console.log('[MediciAPI] SearchHotelPrice request:', {
+    ...requestWithSecret,
+    client_secret: '***HIDDEN***'
+  });
+
+  const response = await makeApiRequest<SearchPriceResponse>(
     "GetInnstantSearchPrice",
     "POST",
     requestWithSecret
   );
+
+  console.log('[MediciAPI] SearchHotelPrice response:', {
+    itemsCount: response.items?.length || 0,
+    hasItems: !!response.items
+  });
+
+  return response;
 }
 
 /**

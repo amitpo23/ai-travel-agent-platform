@@ -38,13 +38,13 @@ const hotelSearchTool = {
   type: "function" as const,
   function: {
     name: "search_hotels",
-    description: "Search for available hotel rooms with pricing. Use this when the user asks about hotel availability, prices, or wants to find a room.",
+    description: "Search for available hotel rooms with pricing in a specific city. Use this when the user asks about hotel availability, prices, or wants to find a room.",
     parameters: {
       type: "object",
       properties: {
-        hotelName: {
+        city: {
           type: "string",
-          description: "Name of the hotel to search (e.g., 'Dizengoff Inn')",
+          description: "City name to search hotels in (e.g., 'Dubai', 'Tel Aviv', 'Paris')",
         },
         dateFrom: {
           type: "string",
@@ -63,8 +63,12 @@ const hotelSearchTool = {
           items: { type: "number" },
           description: "Array of children ages (empty array if no children)",
         },
+        limit: {
+          type: "number",
+          description: "Maximum number of results to return (default: 5)",
+        },
       },
-      required: ["hotelName", "dateFrom", "dateTo"],
+      required: ["city", "dateFrom", "dateTo"],
     },
   },
 };
@@ -309,18 +313,26 @@ Instructions:
 
             try {
               if (functionName === "search_hotels") {
+                console.log('[Chat] Searching hotels with params:', functionArgs);
+
                 const searchResult = await mediciApi.searchHotelPrice({
                   dateFrom: functionArgs.dateFrom,
                   dateTo: functionArgs.dateTo,
-                  city: functionArgs.city || functionArgs.destination || '',
+                  city: functionArgs.city || '',
                   adults: functionArgs.adults || 2,
                   paxChildren: functionArgs.children || [],
+                  limit: functionArgs.limit || 5,
                   ShowExtendedData: true,
+                });
+
+                console.log('[Chat] Search result:', {
+                  itemsCount: searchResult.items?.length || 0,
+                  hasItems: !!searchResult.items,
                 });
 
                 toolResult = {
                   success: true,
-                  data: searchResult.items?.slice(0, 5) || [], // Limit to top 5 results
+                  data: searchResult.items?.slice(0, functionArgs.limit || 5) || [],
                 };
               } else if (functionName === "prebook_room") {
                 const preBookRequest = mediciApi.buildPreBookRequest(
@@ -394,7 +406,12 @@ Instructions:
                 });
               }
             } catch (error) {
-              console.error(`Tool ${functionName} error:`, error);
+              console.error(`[Chat] Tool ${functionName} error:`, error);
+              console.error(`[Chat] Tool ${functionName} full error details:`, {
+                message: error instanceof Error ? error.message : "Unknown error",
+                stack: error instanceof Error ? error.stack : undefined,
+                functionArgs,
+              });
               toolResult = {
                 success: false,
                 error: error instanceof Error ? error.message : "Unknown error",
