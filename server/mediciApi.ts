@@ -42,6 +42,12 @@ async function makeApiRequest<T>(
     throw new Error(`Medici API error: ${response.status} - ${errorText}`);
   }
 
+  // Handle HTTP 204 No Content responses
+  if (response.status === 204) {
+    console.warn(`[MediciAPI] Received 204 No Content - endpoint returned no data`);
+    return {} as T;
+  }
+
   const data = await response.json();
   return data;
 }
