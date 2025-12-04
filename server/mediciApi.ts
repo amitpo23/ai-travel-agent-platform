@@ -301,6 +301,8 @@ export async function cancelBooking(
 
 /**
  * Helper function to build PreBook JSON request
+ * UPDATED: Based on official Medici API documentation
+ * pax structure: adults must be array of objects with age/name/surname
  */
 export function buildPreBookRequest(
   code: string,
@@ -311,15 +313,21 @@ export function buildPreBookRequest(
     pax: Array<{ adults: number; children: any[] }>;
   }
 ): PreBookRequest {
+  // Convert pax format: { adults: 2 } → { adults: [{age: 30, name: "Guest1"}, {age: 30, name: "Guest2"}] }
+  const convertedPax = searchRequest.pax.map(paxGroup => ({
+    adults: Array.from({ length: paxGroup.adults }, (_, i) => ({
+      age: 30,  // Default age
+      name: `Guest${i + 1}`,
+      surname: "Traveler"
+    })),
+    children: paxGroup.children || []
+  }));
+
   const jsonRequest = {
     services: [
       {
-        searchCodes: [
-          {
-            code,
-            pax: searchRequest.pax,
-          },
-        ],
+        code,  // Direct code field (simplified format per documentation)
+        pax: convertedPax,
         searchRequest: {
           currencies: ["USD"],
           customerCountry: "IL",
@@ -338,7 +346,7 @@ export function buildPreBookRequest(
             { name: "onRequest", value: false },
             { name: "showSpecialDeals", value: true },
           ],
-          pax: searchRequest.pax,
+          pax: convertedPax,
           service: "hotels",
         },
       },

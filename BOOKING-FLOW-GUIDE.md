@@ -103,14 +103,38 @@ POST /api/hotels/PreBook
 }
 ```
 
+### ⚠️ פורמט Pax הנכון (CRITICAL!)
+
+**חשוב מאוד:** `pax.adults` חייב להיות **מערך של אובייקטים** עם פרטי אורחים, לא מספר!
+
+**WRONG** ❌:
+```json
+{"pax": [{"adults": 2, "children": []}]}
+```
+
+**CORRECT** ✅:
+```json
+{"pax": [{
+  "adults": [
+    {"age": 30, "name": "Guest1", "surname": "Traveler"},
+    {"age": 30, "name": "Guest2", "surname": "Traveler"}
+  ],
+  "children": []
+}]}
+```
+
 ### Request Body (מפוענח לקריאות)
 ```javascript
 {
   jsonRequest: JSON.stringify({
     services: [{
-      searchCodes: [{
-        code: "12915:standard:twin:RO:692fec3fe5c7d4.47273632$1003X1095n1095t", // מהשלב הקודם
-        pax: [{ adults: 2, children: [] }]
+      code: "12915:standard:twin:RO:692fec3fe5c7d4.47273632$1003X1095n1095t", // מהשלב הקודם
+      pax: [{
+        adults: [
+          {age: 30, name: "Guest1", surname: "Traveler"},
+          {age: 30, name: "Guest2", surname: "Traveler"}
+        ],
+        children: []
       }],
       searchRequest: {
         currencies: ["USD"],

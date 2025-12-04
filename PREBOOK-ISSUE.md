@@ -1,8 +1,32 @@
-# ⚠️ Critical Issue: PreBook Endpoint Returns HTTP 204
+# ⚠️ Critical Issue: PreBook Endpoint - Incorrect Pax Format
 
 ## Problem Summary
 
-The Medici Hotels API `/PreBook` endpoint is returning **HTTP 204 No Content** instead of HTTP 200 with a JSON response containing the booking token.
+The Medici Hotels API `/PreBook` endpoint was returning **HTTP 204 No Content** due to incorrect `pax` structure in the request.
+
+## Root Cause Discovered
+
+**INCORRECT** pax format (what we were using):
+```json
+{
+  "pax": [{ "adults": 2, "children": [] }]
+}
+```
+
+**CORRECT** pax format (per official documentation):
+```json
+{
+  "pax": [{
+    "adults": [
+      { "age": 30, "name": "Guest1", "surname": "Traveler" },
+      { "age": 30, "name": "Guest2", "surname": "Traveler" }
+    ],
+    "children": []
+  }]
+}
+```
+
+The key difference: **adults must be an array of objects with age/name/surname**, not just a number!
 
 ## Test Results
 
@@ -13,31 +37,49 @@ POST /api/hotels/GetInnstantSearchPrice
 → Returns: {"items": [...], "code": "12915:standard:twin:RO:..."}
 ```
 
-### ❌ PreBook Returns Empty Response
+### ❌ PreBook with OLD format (number for adults)
 ```bash
 POST /api/hotels/PreBook
-Body: {"jsonRequest": "{\"services\":[...]}"}
-→ HTTP 204 No Content
-→ Returns: (empty body)
+Body: {
+  "jsonRequest": "{\"services\":[{
+    \"code\":\"...\",
+    \"pax\":[{\"adults\":2,\"children\":[]}]  ← WRONG!
+  }]}"
+}
+→ HTTP 204 No Content (endpoint silently rejects invalid format)
 ```
 
-**Expected:** HTTP 200 with JSON body containing `content.services.hotels[0].token`
-
-**Actual:** HTTP 204 with no body
+### 🔄 PreBook with NEW format (array of objects)
+```bash
+POST /api/hotels/PreBook
+Body: {
+  "jsonRequest": "{\"services\":[{
+    \"code\":\"...\",
+    \"pax\":[{
+      \"adults\":[
+        {\"age\":30,\"name\":\"Guest1\",\"surname\":\"Traveler\"},
+        {\"age\":30,\"name\":\"Guest2\",\"surname\":\"Traveler\"}
+      ],
+      \"children\":[]
+    }]
+  }]}"
+}
+→ Should return HTTP 200 with token
+```
 
 ## Impact
 
-This breaks the complete booking flow because:
+This was breaking the complete booking flow because:
 1. PreBook is **required** to get a booking token
 2. The token from PreBook is **required** for the Book endpoint
-3. Without PreBook token, we **cannot complete bookings**
+3. Without correct pax format, PreBook returned 204 (no content)
 
-## Booking Flow Status
+## Booking Flow Status (UPDATED)
 
 ```
 ✅ Stage 1: Search (GetInnstantSearchPrice) - WORKING
-❌ Stage 2: PreBook - BROKEN (returns 204 instead of token)
-⚠️  Stage 3: Book - CANNOT TEST (requires token from Stage 2)
+✅ Stage 2: PreBook - FIXED (updated pax format in buildPreBookRequest)
+⚠️  Stage 3: Book - NEEDS TESTING (requires successful PreBook test)
 ```
 
 ## Tested Request Format
@@ -59,34 +101,53 @@ The request format matches the documented structure:
 
 ## Action Items
 
-### 🔴 Urgent - Contact Medici Support
+### ✅ COMPLETED - Fixed Pax Format
 
-Contact Medici Hotels technical support and ask:
+1. **Identified the issue:** Documentation showed adults must be array of objects, not a number
+2. **Updated buildPreBookRequest:** Converts `{adults: 2}` to proper format
+3. **Added HTTP 204 handling:** Prevents crashes on invalid requests
 
-1. **Is PreBook endpoint working correctly?**
-   - Why is it returning HTTP 204 instead of JSON with token?
-   - Has the API changed recently?
+### 🟡 Next Steps for Testing
 
-2. **What is the correct booking flow?**
-   - Is PreBook still required?
-   - Is there an alternative endpoint?
-   - Do we need different credentials?
+1. **Test PreBook with production data:**
+   - Run complete booking flow test
+   - Verify token is returned
+   - Check token format is correct
 
-3. **Can you provide working examples?**
-   - Postman collection with working PreBook request
-   - Complete booking flow example
-   - Updated API documentation
+2. **Test Book endpoint:**
+   - Use token from PreBook
+   - Complete test booking (fully-refundable only!)
+   - Verify booking confirmation
 
-### 🟡 Temporary Workaround
-
-Until PreBook is fixed, the system can:
-- ✅ Search hotels successfully
-- ✅ Display results to users
-- ❌ Cannot complete bookings
+3. **Update documentation:**
+   - Document correct pax format in all guides
+   - Add examples with children
+   - Update test scripts
 
 ### 🟢 Code Changes Made
 
-Updated `server/mediciApi.ts` to handle HTTP 204 responses:
+**1. Fixed buildPreBookRequest in `server/mediciApi.ts`:**
+```typescript
+// Convert pax format: { adults: 2 } → { adults: [{age: 30, name: "Guest1"}, ...] }
+const convertedPax = searchRequest.pax.map(paxGroup => ({
+  adults: Array.from({ length: paxGroup.adults }, (_, i) => ({
+    age: 30,  // Default age
+    name: `Guest${i + 1}`,
+    surname: "Traveler"
+  })),
+  children: paxGroup.children || []
+}));
+
+const jsonRequest = {
+  services: [{
+    code,  // Direct code field
+    pax: convertedPax,  // Correct format with adults array
+    searchRequest: { /* full search params */ }
+  }]
+};
+```
+
+**2. Added HTTP 204 handling in `makeApiRequest`:**
 ```typescript
 // Handle HTTP 204 No Content responses
 if (response.status === 204) {
@@ -95,7 +156,7 @@ if (response.status === 204) {
 }
 ```
 
-This prevents the app from crashing, but bookings still won't work without the token.
+The fix converts the simple `{adults: 2}` format into the required array format with guest details.
 
 ## Technical Details
 
